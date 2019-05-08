@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="Session5-E6-TicTacToe.css">
+</head>
+<body>
+<h1>Caro game simple</h1>
+<p id="caroGame"/>
+<input type="button" value="Player 1" id="player" onclick="tick()"/>
+<input type="button" value="Reset" id="reset" onclick="Reset()"/>
+<script>
+    //tao ban co
+    const max = 20;
+    let Rmax = max;
+    let Cmax = max;
+    let matrix = [];
+    let data = '';
+    generateBoard();
+    //ham tao bang
+    function generateBoard() {
+        matrix=[];
+        data='';
+        for (let row = 0; row < Rmax; row++) {
+            matrix[row] = new Array(Cmax);
+            for (let col = 0; col < Cmax; col++) {
+                matrix[row][col] = "<input type= 'button' id='cell' value=''>";
+            }
+        }
+        for (let row = 0; row < Rmax; row++) {
+            data += '<br/>';
+            for (let col = 0; col < Cmax; col++) {
+                data += matrix[row][col] + '&nbsp;';
+            }
+        }
+        data += '<br/><br/><input type="button" value="Player 1" id="player" onclick="tick()"><input type="button" value="Reset" id="reset" onclick="Reset()"/>';
+        document.getElementById('caroGame').innerHTML = data;
+    }
+    //ham danh XO
+    function tick() {
+        let player = document.getElementById('player').value;
+        //player 1 tick X
+        if (player == 'Player 1') {
+            let indexX = Number(prompt('X=')) - 1;
+            let indexY = Number(prompt('Y=')) - 1;
+            data = '';
+            //xỬ lý khi tick trung nhau
+            let curCell = matrix[indexX][indexY];
+            if (curCell != "<input type= 'button' id='cell' value=''>") {
+                alert('This cell was ticked');
+            } else {
+                matrix[indexX][indexY] = "<input type= 'button' id='cell' value='X'>";
+                for (let row = 0; row < Rmax; row++) {
+                    data += '<br/>';
+                    for (let col = 0; col < Cmax; col++) {
+                        data += matrix[row][col] + '&nbsp;';
+                    }
+                }
+                data += '<br/><br/><input type="button" value="Player 2" id="player" onclick="tick()"><input type="button" value="Reset" id="reset" onclick="Reset()"/>';
+                document.getElementById('caroGame').innerHTML = '<hr/>' + data;
+
+            }
+            whoWin(indexX,indexY,player,"<input type= 'button' id='cell' value='X'>") ;
+            //player 2 tick O
+        } else if (player == 'Player 2') {
+            let indexX = Number(prompt('X=')) - 1;
+            let indexY = Number(prompt('Y=')) - 1;
+            data = '';
+            //xỬ lý khi tick trung nhau
+            let curCell = matrix[indexX][indexY];
+            if (curCell != "<input type= 'button' id='cell' value=''>") {
+                alert('This cell was ticked');
+            } else {
+                matrix[indexX][indexY] = "<input type= 'button' id='cell' value='O'>";
+                for (let row = 0; row < Rmax; row++) {
+                    data += '<br/>';
+                    for (let col = 0; col < Cmax; col++) {
+                        data += matrix[row][col] + '&nbsp;';
+                    }
+                }
+                data += '<br/><br/><input type="button" value="Player 1" id="player" onclick="tick()"><input type="button" value="Reset" id="reset" onclick="Reset()"/>';
+                document.getElementById('caroGame').innerHTML = '<hr/>' + data;
+
+            }
+            whoWin(indexX,indexY,player,"<input type= 'button' id='cell' value='O'>") ;
+        }
+    }
+    //ham choi lai
+    function Reset() {
+        generateBoard();
+    }
+    //ham xet ai thang
+    function whoWin(posX,posY,player,char) {
+        posX=Number(posX);
+        posY=Number(posY);
+        let horirontalLeft=0;
+        let horirontalRight=0;
+        let verticalBottom=0;
+        let verticalTop=0;
+        let diagonalTopLeft=0
+        let diagonalTopRight=0;
+        let diagonalBotLeft=0;
+        let diagonalBotRight=0;
+        let win=3;
+        //xet hang ngang ben phai cua posY
+        for (let col=posY;col<Cmax;col++) {
+            if (matrix[posX][col]==char) {
+                horirontalRight++;
+            } else {
+                break;
+            }
+        }
+        //xet hang ngang ben trai cua posY
+        for (let col=posY-1;col>=0;col--) {
+            if (matrix[posX][col]==char) {
+                horirontalLeft++;
+            } else {
+                break;
+            }
+        }
+        //xet hang doc ben duoi cua posX
+        for (let row=posX;row<Rmax;row++) {
+            if (matrix[row][posY]==char) {
+                verticalBottom++;
+            } else {
+                break;
+            }
+        }
+        //xet hang doc ben tren cua posX
+        for (let row=posX-1;row>=0;row--) {
+            if (matrix[row][posY]==char) {
+                verticalTop++;
+            } else {
+                break;
+            }
+        }
+        //xet hang cheo trai-phai-duoi
+        let col=posY;
+        for (let row=posX;row<Rmax;row++) {
+            if (matrix[row][col]==char) {
+                diagonalBotLeft++;
+            } else {
+                break;
+            }
+            col--;
+            if (col<0) break;
+        }
+        //xet hang cheo trai-phai-tren
+        col=posY+1;
+        for (let row=posX-1;row>=0;row--) {
+            if (matrix[row][col]==char) {
+                diagonalTopRight++;
+            } else {
+                break;
+            }
+            col++;
+            if (col>=Cmax) break;
+        }
+        //xet hang cheo phai-trai-tren
+        col=posY;
+        for (let row=posX;row>=0;row--) {
+            if (matrix[row][col]==char) {
+                diagonalTopLeft++;
+            } else {
+                break;
+            }
+            col--;
+            if (col<0) break;
+        }
+        //xet hang cheo phai-trai-duoi
+        col=posY+1;
+        for (let row=posX+1;row<Rmax;row++) {
+            if (matrix[row][col]==char) {
+                diagonalBotRight++;
+            } else {
+                break;
+            }
+            col++
+            if (col>=Cmax) break;
+        }
+        let result=((verticalTop+verticalBottom)==win ||
+            (horirontalRight+horirontalLeft)==win ||
+            (diagonalTopLeft+diagonalBotRight)==win ||
+            (diagonalTopRight+diagonalBotLeft)==win);
+        if (result) {
+            alert(player+' WIN <3 <3');
+        }
+    }
+
+</script>
+</body>
+</html>

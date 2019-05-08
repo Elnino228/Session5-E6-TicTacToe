@@ -1,0 +1,13 @@
+#cell {
+    width: 22px;
+    height: 20px;
+    text-align:center;
+    font-size: 15px;
+    color: black;
+    background-color: aqua;
+}#player {
+    position: relative;left: 200px;
+ }
+ #reset {
+     position: relative;left: -50px;
+ }
