@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="Session5-E6-TicTacToe-Button.css">
+</head>
+<body style="text-align: center">
+<h1 style="text-align: center" >Caro game simple</h1>
+<!--<input type="button" value="Player 1" id="player" onclick="tick()"/><br>-->
+<p id="caroGame"/>
+<!--<input type="button" value="Reset" id="reset" onclick="Reset()"/>-->
+<script>
+    //tao ban co
+    const max = 20;
+    let Rmax = max;
+    let Cmax = max;
+    let matrix = [];
+    let data = '';
+    generateBoard();
+
+    //ham tao bang
+    function generateBoard() {
+        //matrix = [];
+        data = '';
+        //tao mang button
+        for (let row = 0; row < Rmax; row++) {
+            matrix[row] = new Array(Cmax);
+            for (let col = 0; col < Cmax; col++) {
+                matrix[row][col] = "<input type= 'button' class='cell' id="+String(row)+'-'+String(col)+ " value='' onclick='tick(this.id)'>";
+            }
+        }
+        //gan mang thanh chuoi data de hien thi
+        for (let row = 0; row < Rmax; row++) {
+            data += '<br/>';
+            for (let col = 0; col < Cmax; col++) {
+                data += matrix[row][col] + '&nbsp;';
+            }
+        }
+        // data += ;
+        document.getElementById('caroGame').innerHTML = '<input type="button" value="Player 1" style="background-color: yellow" id="player">'+
+            '<input type="button" value="Reset" id="reset" onclick="Reset()"/>'+'<br>'+data;
+    }
+    //ham danh XO
+    function tick(ID) {
+        let player = document.getElementById('player').value;
+        let cell=document.getElementById(ID);
+        //player 1 tick X
+        if (player == 'Player 1') {
+            //xỬ lý khi tick trùng vào ô đã tick
+            if (cell.value!='') alert('This cell was ticked');
+            else  {
+                cell.value='X';
+                cell.style.backgroundColor='yellow';
+                document.getElementById('player').value='Player 2';
+                document.getElementById('player').style.backgroundColor='aqua';
+            }
+            whoWin(ID, player, "X");
+            //player 2 tick O
+        } else if (player == 'Player 2') {
+            //xỬ lý khi tick trùng vào ô đã tick
+            if (cell.value!='') alert('This cell was ticked');
+            else  {
+                cell.value='O';
+                cell.style.backgroundColor='aqua';
+                document.getElementById('player').value='Player 1';
+                document.getElementById('player').style.backgroundColor='yellow';
+            }
+            whoWin(ID, player, "O");
+        }
+    }
+    //ham choi lai
+    function Reset() {
+        generateBoard();
+    }
+    //ham xu thang
+    function whoWin(ID, player, char) {
+        let ID_arr=ID.split('-');
+        let curPosX = Number(ID_arr[0]);
+        let curPosY = Number(ID_arr[1]);
+        // console.log(curPosX);
+        // console.log(curPosY);
+        let horirontalLeft = 0;
+        let horirontalRight = 0;
+        let verticalBottom = 0;
+        let verticalTop = 0;
+        let diagonalTopLeft = 0;
+        let diagonalTopRight = 0;
+        let diagonalBotLeft = 0;
+        let diagonalBotRight = 0;
+        let win = 3;
+        let cell;
+        let cellPre;
+        let cellNex;
+        let IDPre;
+        let IDNex;
+        let block2HeadsHor=false;
+        let block2HeadsVer=false;
+        let block2HeadsDiaMain=false;
+        let block2HeadsHorDiaSub=false;
+        //xet hang ngang ben phai cua posY
+        for (let col=curPosY; col < Cmax; col++) {
+            cell = document.getElementById(''+curPosX+'-'+col);
+            //console.log(curPosY);
+            if (cell.value == char) {
+                horirontalRight++;
+            } else {
+                break;
+            }
+        }
+        IDNex=''+curPosX+'-'+(curPosY+horirontalRight);
+        //xet hang ngang ben trai cua posY
+        for (let col = curPosY - 1; col >= 0; col--) {
+            cell = document.getElementById(''+curPosX+'-'+col);
+            if (cell.value == char) {
+                horirontalLeft++;
+
+            } else {
+                break;
+            }
+        }
+        //xét trường hợp bị chặn 2 đầu thì ko thắng
+        IDPre=curPosY-horirontalLeft-1>=0?''+curPosX+'-'+(curPosY-horirontalLeft-1):''+curPosX+'-'+(curPosY-horirontalLeft);
+        cellPre=document.getElementById(IDPre);
+        cellNex=document.getElementById(IDNex);
+        // console.log(cellPre.value);
+        //  console.log(cellNex.value);
+        //console.log(cellPre.value!=char && cellPre.value!='' && cellNex.value!=char && cellNex.value!='');
+        //console.log(horirontalLeft);
+        if (cellPre.value!=char && cellPre.value!='' && cellNex.value!=char && cellNex.value!='') {
+            block2HeadsHor=true;
+            if (cellPre.value==char&&cellNex.value==char) {
+                block2HeadsHor=false;
+            }
+        }
+        // console.log(block2HeadsHor);
+        //console.log(horirontalLeft+horirontalRight);
+        //xet hang doc ben duoi cua posX
+        for (let row=curPosX; row < Rmax; row++) {
+            cell = document.getElementById(''+row+'-'+curPosY);
+            if (cell.value == char) {
+                verticalBottom++;
+            } else {
+                break;
+            }
+        }
+        IDNex=''+(curPosX+verticalBottom)+'-'+curPosY;
+        //xet hang doc ben tren cua posX
+        for (let row = curPosX - 1; row >= 0; row--) {
+            cell = document.getElementById(''+row+'-'+curPosY);
+            if (cell.value == char) {
+                verticalTop++;
+            } else {
+                break;
+            }
+        }
+        //xét trường hợp bị chặn 2 đầu thì ko thắng
+        IDPre=(curPosX-verticalTop-1)>=0?''+(curPosX-verticalTop-1)+'-'+curPosY:''+(curPosX-verticalTop)+'-'+curPosY;
+        cellPre=document.getElementById(IDPre);
+        cellNex=document.getElementById(IDNex);
+        // console.log(cellPre.value);
+        // console.log(cellNex.value);
+        if (cellPre.value!=char && cellPre.value!='' &&cellNex.value!=char && cellNex.value!='') {
+            block2HeadsVer=true;
+            if (cellPre.value==char&&cellNex.value==char) {
+                block2HeadsVer=false;
+            }
+        }
+        // console.log(block2HeadsVer);
+        //xet hang cheo trai-phai-duoi
+        let col = curPosY;
+        let curX=Rmax-1;
+        let curY=0;
+        for (let row=curPosX; row < Rmax; row++) {
+            cell = document.getElementById(''+row+'-'+col);
+            if (cell.value == char) {
+                diagonalBotLeft++;
+            } else {
+                curX=row;
+                curY=col;
+                break;
+            }
+            col--;
+            if (col < 0) break;
+        }
+        IDNex=''+(curX)+'-'+(curY);
+        //console.log(diagonalBotLeft);
+        //xet hang cheo trai-phai-tren
+        col = curPosY+1;
+        curX=0;
+        curY=Cmax-1;
+        for (let row = curPosX - 1; row >= 0; row--) {
+            if (col >= Cmax) break;
+            cell = document.getElementById(''+row+'-'+col);
+            if (cell.value == char) {
+                diagonalTopRight++;
+            } else {
+                curX=row;
+                curY=col;
+                break;
+            }
+            col++;
+        }
+        IDPre=''+(curX)+'-'+(curY);
+         cellPre=document.getElementById(IDPre);
+         cellNex=document.getElementById(IDNex);
+        // console.log(IDPre);
+        // console.log(IDNex);
+        //  console.log(cellPre.value);
+        // console.log(cellNex);
+        //console.log(cellNex.value);
+        if (cellPre.value!=char && cellPre.value!='' &&cellNex.value!=char && cellNex.value!='') {
+            block2HeadsDiaMain=true;
+            if (cellPre.value==char&&cellNex.value==char) {
+                block2HeadsDiaMain=false;
+            }
+        }
+        // console.log(block2HeadsDiaMain);
+        //xet hang cheo phai-trai-tren
+        col = curPosY;
+        for (let row = curPosX; row >= 0; row--) {
+            cell = document.getElementById(''+row+'-'+col);
+            if (cell.value == char) {
+                diagonalTopLeft++;
+            } else {
+                curX=row;
+                curY=col;
+                break;
+            }
+            col--;
+            if (col < 0) break;
+        }
+        IDPre=''+(curX)+'-'+(curY);
+        //xet hang cheo phai-trai-duoi
+        col = curPosY + 1;
+        for (let row = curPosX + 1; row < Rmax; row++) {
+            if (col >= Cmax) break;
+            cell = document.getElementById(''+row+'-'+col);
+            if (cell.value == char) {
+                diagonalBotRight++;
+            } else {
+                curX=row;
+                curY=col;
+                break;
+            }
+            col++;
+
+        }
+        IDNex=''+(curX)+'-'+(curY);
+        cellPre=document.getElementById(IDPre);
+        cellNex=document.getElementById(IDNex);
+        // console.log(cellPre.value);
+        // console.log(cellNex.value);
+        if (cellPre.value!=char && cellPre.value!='' &&cellNex.value!=char && cellNex.value!=''){
+            block2HeadsHorDiaSub=true;
+            if (cellPre.value=char&&cellNex.value==char) {
+                block2HeadsHorDiaSub=false;
+            }
+        }
+        // console.log(block2HeadsHorDiaSub);
+        let result = ((verticalTop + verticalBottom) == win ||
+            (horirontalRight + horirontalLeft) == win ||
+            (diagonalTopLeft + diagonalBotRight) == win ||
+            (diagonalTopRight + diagonalBotLeft) == win);
+        let block2Heads=block2HeadsHor||block2HeadsVer||block2HeadsDiaMain||block2HeadsHorDiaSub;
+        if (result) {
+            if (!block2Heads) {
+            alert(player + ' WIN <3 <3');
+            freezeBtn();
+            }
+        }
+        // console.log(result);
+         //console.log(block2Heads);
+    }
+    function freezeBtn() {
+        for (let row=0;row<Rmax;row++) {
+            for (let col=0;col<Cmax;col++) {
+                document.getElementById(String(row)+'-'+String(col)).disabled=true;
+            }
+        }
+    }
+
+</script>
+</body>
+</html>

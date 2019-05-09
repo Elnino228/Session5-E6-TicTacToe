@@ -21,10 +21,11 @@
     let matrix = [];
     let data = '';
     generateBoard();
+
     //ham tao bang
     function generateBoard() {
-        matrix=[];
-        data='';
+        matrix = [];
+        data = '';
         for (let row = 0; row < Rmax; row++) {
             matrix[row] = new Array(Cmax);
             for (let col = 0; col < Cmax; col++) {
@@ -40,6 +41,7 @@
         data += '<br/><br/><input type="button" value="Player 1" id="player" onclick="tick()"><input type="button" value="Reset" id="reset" onclick="Reset()"/>';
         document.getElementById('caroGame').innerHTML = data;
     }
+
     //ham danh XO
     function tick() {
         let player = document.getElementById('player').value;
@@ -64,7 +66,7 @@
                 document.getElementById('caroGame').innerHTML = '<hr/>' + data;
 
             }
-            whoWin(indexX,indexY,player,"<input type= 'button' id='cell' value='X'>") ;
+            whoWin(indexX, indexY, player, "<input type= 'button' id='cell' value='X'>");
             //player 2 tick O
         } else if (player == 'Player 2') {
             let indexX = Number(prompt('X=')) - 1;
@@ -86,108 +88,121 @@
                 document.getElementById('caroGame').innerHTML = '<hr/>' + data;
 
             }
-            whoWin(indexX,indexY,player,"<input type= 'button' id='cell' value='O'>") ;
+            whoWin(indexX, indexY, player, "<input type= 'button' id='cell' value='O'>");
         }
     }
+
     //ham choi lai
     function Reset() {
         generateBoard();
     }
-    //ham xet ai thang
-    function whoWin(posX,posY,player,char) {
-        posX=Number(posX);
-        posY=Number(posY);
-        let horirontalLeft=0;
-        let horirontalRight=0;
-        let verticalBottom=0;
-        let verticalTop=0;
-        let diagonalTopLeft=0
-        let diagonalTopRight=0;
-        let diagonalBotLeft=0;
-        let diagonalBotRight=0;
-        let win=3;
+
+    //ham xu thang
+    function whoWin(posX, posY, player, char) {
+        posX = Number(posX);
+        posY = Number(posY);
+        let horirontalLeft = 0;
+        let horirontalRight = 0;
+        let verticalBottom = 0;
+        let verticalTop = 0;
+        let diagonalTopLeft = 0;
+        let diagonalTopRight = 0;
+        let diagonalBotLeft = 0;
+        let diagonalBotRight = 0;
+        let win = 3;
+        let valueCell;
         //xet hang ngang ben phai cua posY
-        for (let col=posY;col<Cmax;col++) {
-            if (matrix[posX][col]==char) {
+        for (let col = posY; col < Cmax; col++) {
+            //giá trị X, O có chỉ số là 39 trong 1 phần từ matrix
+            valueCell = matrix[posX][col];
+            if (valueCell[39] == char[39]) {
                 horirontalRight++;
             } else {
                 break;
             }
         }
         //xet hang ngang ben trai cua posY
-        for (let col=posY-1;col>=0;col--) {
-            if (matrix[posX][col]==char) {
+        for (let col = posY - 1; col >= 0; col--) {
+            valueCell = matrix[posX][col];
+            if (valueCell[39] == char[39]) {
                 horirontalLeft++;
+
             } else {
                 break;
             }
         }
         //xet hang doc ben duoi cua posX
-        for (let row=posX;row<Rmax;row++) {
-            if (matrix[row][posY]==char) {
+        for (let row = posX; row < Rmax; row++) {
+            valueCell = matrix[row][posY];
+            if (valueCell[39] == char[39]) {
                 verticalBottom++;
             } else {
                 break;
             }
         }
         //xet hang doc ben tren cua posX
-        for (let row=posX-1;row>=0;row--) {
-            if (matrix[row][posY]==char) {
+        for (let row = posX - 1; row >= 0; row--) {
+            valueCell = matrix[row][posY];
+            if (valueCell[39] == char[39]) {
                 verticalTop++;
             } else {
                 break;
             }
         }
         //xet hang cheo trai-phai-duoi
-        let col=posY;
-        for (let row=posX;row<Rmax;row++) {
-            if (matrix[row][col]==char) {
+        let col = posY;
+        for (let row = posX; row < Rmax; row++) {
+            valueCell = matrix[row][col];
+            if (valueCell[39] == char[39]) {
                 diagonalBotLeft++;
             } else {
                 break;
             }
             col--;
-            if (col<0) break;
+            if (col < 0) break;
         }
         //xet hang cheo trai-phai-tren
-        col=posY+1;
-        for (let row=posX-1;row>=0;row--) {
-            if (matrix[row][col]==char) {
+        col = posY + 1;
+        for (let row = posX - 1; row >= 0; row--) {
+            valueCell = matrix[row][col];
+            if (valueCell[39] == char[39]) {
                 diagonalTopRight++;
             } else {
                 break;
             }
             col++;
-            if (col>=Cmax) break;
+            if (col >= Cmax) break;
         }
         //xet hang cheo phai-trai-tren
-        col=posY;
-        for (let row=posX;row>=0;row--) {
-            if (matrix[row][col]==char) {
+        col = posY;
+        for (let row = posX; row >= 0; row--) {
+            valueCell = matrix[row][col];
+            if (valueCell[39] == char[39]) {
                 diagonalTopLeft++;
             } else {
                 break;
             }
             col--;
-            if (col<0) break;
+            if (col < 0) break;
         }
         //xet hang cheo phai-trai-duoi
-        col=posY+1;
-        for (let row=posX+1;row<Rmax;row++) {
-            if (matrix[row][col]==char) {
+        col = posY + 1;
+        for (let row = posX + 1; row < Rmax; row++) {
+            valueCell = matrix[row][col];
+            if (valueCell[39] == char[39]) {
                 diagonalBotRight++;
             } else {
                 break;
             }
-            col++
-            if (col>=Cmax) break;
+            col++;
+            if (col >= Cmax) break;
         }
-        let result=((verticalTop+verticalBottom)==win ||
-            (horirontalRight+horirontalLeft)==win ||
-            (diagonalTopLeft+diagonalBotRight)==win ||
-            (diagonalTopRight+diagonalBotLeft)==win);
+        let result = ((verticalTop + verticalBottom) == win ||
+            (horirontalRight + horirontalLeft) == win ||
+            (diagonalTopLeft + diagonalBotRight) == win ||
+            (diagonalTopRight + diagonalBotLeft) == win);
         if (result) {
-            alert(player+' WIN <3 <3');
+            alert(player + ' WIN <3 <3');
         }
     }
 
